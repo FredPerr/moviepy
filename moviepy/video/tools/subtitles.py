@@ -180,6 +180,6 @@ def file_to_subtitles(filename, encoding=None):
     blocks = [x.strip().split('\n') for x in re.findall('((?:[^\n]+\n?){1,3})', file_content)]
 
     for i, timestamp, text in blocks:
-        formatted_timestamp = timestamp.split(' --> ')
-        subtitles_data.append((formatted_timestamp, text))
+        t_start, t_end = timestamp.split(' --> ')
+        subtitles_data.append(((convert_to_seconds(t_start), convert_to_seconds(t_end)), text))
     return subtitles_data
