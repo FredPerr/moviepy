@@ -94,12 +94,12 @@ class VideoClip(Clip):
     """
 
     def __init__(
-        self, make_frame=None, is_mask=False, duration=None, has_constant_size=True
+        self, make_frame=None, is_mask=False, duration=None, has_constant_size=True, pos=('center', 'center')
     ):
         super().__init__()
         self.mask = None
         self.audio = None
-        self.pos = lambda t: (0, 0)
+        self.pos = pos
         self.relative_pos = False
         self.layer = 0
         if make_frame:
