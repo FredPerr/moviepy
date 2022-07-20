@@ -168,17 +168,18 @@ def file_to_subtitles(filename, encoding=None):
 
     Only works for '.srt' format for the moment.
     """
-    times_texts = []
-    current_times = None
-    current_text = ""
-    with open(filename, "r", encoding=encoding) as file:
-        for line in file:
-            times = re.findall("([0-9]*:[0-9]*:[0-9]*,[0-9]*)", line)
-            if times:
-                current_times = [convert_to_seconds(t) for t in times]
-            elif line.strip() == "":
-                times_texts.append((current_times, current_text.strip("\n")))
-                current_times, current_text = None, ""
-            elif current_times:
-                current_text += line
-    return times_texts
+    subtitles_data = []
+    file_content = None
+    with open(filename, mode='r', encoding=encoding) as file:
+        file_content = file.read()
+
+    if not file_content:
+        raise ValueError(f"Could not read the content of the file {filename}.")
+
+    # Separates the .srt blocks (3 lines blocks)
+    blocks = [x.strip().split('\n') for x in re.findall('((?:[^\n]+\n?){1,3})', file_content)]
+
+    for i, timestamp, text in blocks:
+        formatted_timestamp = timestamp.split(' --> ')
+        subtitles_data.append((formatted_timestamp, text))
+    return subtitles_data
